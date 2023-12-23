@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import * as PokemonService from "../services/pokemonService";
-import { PokemonAtrapado } from "@prisma/client";
 
 export async function adivinar(req: Request, res: Response): Promise<void> {
     try {

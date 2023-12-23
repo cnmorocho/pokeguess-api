@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import router from "./routes";
+import './cron';
 
 const PORT = 8080;
 const app = express();
