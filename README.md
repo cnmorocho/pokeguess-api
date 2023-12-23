@@ -1,3 +1,3 @@
-# node-typescript-template
+# API Pokeguess
 
-Plantilla básica para realizar proyectos con Node y Typescript
+API diseñada para adivinar el Pokémon del día. 
