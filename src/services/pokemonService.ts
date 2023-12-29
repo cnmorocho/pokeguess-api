@@ -6,10 +6,7 @@ import { PokemonAtrapado } from '@prisma/client';
 import { POKEAPI_OBTENER_POKEMONS_URL, PRIMERA_GEN } from '../consts';
 
 export async function adivinar(pokemon: string): Promise<boolean> {
-  let pokemonDelDia: PokemonAtrapado = await PokemonRepository.obtenerDelDia();
-  
-  if (!pokemonDelDia) pokemonDelDia = await atrapar();
-
+  const pokemonDelDia: PokemonAtrapado = await PokemonRepository.obtenerDelDia();
   return pokemonDelDia.nombre === pokemon;
 }
 
@@ -22,4 +19,15 @@ export async function atrapar(): Promise<PokemonAtrapado> {
     axiosResponse.data.results,
   );
   return await PokemonRepository.guardar(pokemonAtrapado.name);
+}
+
+export async function inicializar(): Promise<void> {
+  console.info('Verificando que exista pokemon del dia...')
+  const pokemonDelDia: PokemonAtrapado = await PokemonRepository.obtenerDelDia();
+  if (!pokemonDelDia) {
+    console.info('No se encontró un pokemon.');
+    console.info('Capturando pokemon...');
+    await atrapar();
+  }
+  console.info('Iniciando el juego...')
 }
