@@ -6,8 +6,3 @@ export async function adivinar(req: Request, res: Response): Promise<void> {
   const resultado = await PokemonService.adivinar(pokemon);
   res.status(200).json(resultado);
 }
-
-export async function atrapar(_req: Request, res: Response): Promise<void> {
-  const pokemonAtrapado = await PokemonService.atrapar();
-  res.status(201).json(pokemonAtrapado);
-}
