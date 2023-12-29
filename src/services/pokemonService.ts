@@ -3,22 +3,20 @@ import { PokeIndex, Pokedex } from '../types';
 import { obtenerElementoAleatorio } from '../utils/functions';
 import * as PokemonRepository from '../repositories/pokemonRepository';
 import { PokemonAtrapado } from '@prisma/client';
-import environment from '../configuration/environment';
+import { POKEAPI_OBTENER_POKEMONS_URL, PRIMERA_GEN } from '../consts';
 
-const SIN_LIMITE = '-1';
-const POKEAPI_OBTENER_POKEMONS_URL = environment.POKEAPI_OBTENER_POKEMONS_URL;
+export async function adivinar(pokemon: string): Promise<boolean> {
+  let pokemonDelDia: PokemonAtrapado = await PokemonRepository.obtenerDelDia();
+  
+  if (!pokemonDelDia) pokemonDelDia = await atrapar();
 
-export async function adivinar(nombrePokemon: string): Promise<boolean> {
-  const pokemonActual: PokemonAtrapado =
-    await PokemonRepository.obtenerActual();
-  if (pokemonActual.nombre !== nombrePokemon) return false;
-  return true;
+  return pokemonDelDia.nombre === pokemon;
 }
 
 export async function atrapar(): Promise<PokemonAtrapado> {
   const axiosResponse: AxiosResponse<Pokedex> = await axios.get(
     POKEAPI_OBTENER_POKEMONS_URL,
-    { params: { limit: SIN_LIMITE } },
+    { params: { limit: PRIMERA_GEN } },
   );
   const pokemonAtrapado: PokeIndex = obtenerElementoAleatorio(
     axiosResponse.data.results,

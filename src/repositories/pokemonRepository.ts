@@ -8,7 +8,7 @@ export async function guardar(nombrePokemon: string): Promise<PokemonAtrapado> {
   });
 }
 
-export async function obtenerActual(): Promise<PokemonAtrapado> {
+export async function obtenerDelDia(): Promise<PokemonAtrapado> {
   const fechaHoy = new Date();
   fechaHoy.setHours(0, 0, 0, 0);
   const fechaHoyISOString = fechaHoy.toISOString();
@@ -16,7 +16,7 @@ export async function obtenerActual(): Promise<PokemonAtrapado> {
   fechaManana.setDate(fechaManana.getDate() + 1);
   const fechaMananaISOString = fechaManana.toISOString();
 
-  return await prisma.pokemonAtrapado.findFirstOrThrow({
+  return await prisma.pokemonAtrapado.findFirst({
     where: { fecha: { gte: fechaHoyISOString, lte: fechaMananaISOString } },
   });
 }
