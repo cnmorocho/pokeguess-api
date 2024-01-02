@@ -13,5 +13,11 @@ datasource db {
 model PokemonAtrapado {
   id Int @id @default(autoincrement())
   nombre String
+  id_pokedex Int
+  tipos String
+  categoria String
+  descripcion String
+  color String
+  imagen String
   fecha DateTime @default(now())
 }

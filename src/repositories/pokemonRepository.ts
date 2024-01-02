@@ -2,9 +2,11 @@ import { PrismaClient, PokemonAtrapado } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function guardar(nombrePokemon: string): Promise<PokemonAtrapado> {
+export async function guardar(
+  pokemon: PokemonAtrapado,
+): Promise<PokemonAtrapado> {
   return await prisma.pokemonAtrapado.create({
-    data: { nombre: nombrePokemon },
+    data: pokemon,
   });
 }
 
