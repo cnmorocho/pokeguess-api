@@ -13,7 +13,7 @@ datasource db {
 model PokemonAtrapado {
   id Int @id @default(autoincrement())
   nombre String
-  id_pokedex Int
+  idPokedex Int
   tipos String
   categoria String
   descripcion String
@@ -21,3 +21,23 @@ model PokemonAtrapado {
   imagen String
   fecha DateTime @default(now())
 }
+
+model Juego {
+  id Int @id @default(autoincrement())
+  intento Int @default(0)
+  pista Pista?
+  termino Boolean @default(false)
+  gano Boolean @default(false)
+}
+
+model Pista {
+  id Int @id @default(autoincrement())
+  juego Juego @relation(fields: [idJuego], references: [id])
+  idJuego Int @unique
+  tipo String
+  categoria String?
+  color String?
+  descripcion String?
+  sprite String?
+}
+

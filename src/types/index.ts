@@ -1,4 +1,4 @@
 export { Pokedex, PokeIndex } from './PokeAPI/Pokedex';
 export { Pokemon } from './PokeAPI/Pokemon';
 export { EspeciePokemon } from './PokeAPI/EspeciePokemon';
-export { DescripcionPokemon } from './CustomTypes';
+export { DescripcionPokemon, EstadoJuego } from './CustomTypes';

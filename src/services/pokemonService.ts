@@ -53,7 +53,7 @@ async function obtenerPorURL(url: string): Promise<PokemonAtrapado> {
   );
 
   return {
-    id_pokedex: id,
+    idPokedex: id,
     nombre: name,
     imagen: sprites.other['official-artwork'].front_default,
     tipos: types.map((tipo) => tipo.type.name).toString(),
