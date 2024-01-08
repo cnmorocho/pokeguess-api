@@ -2,7 +2,7 @@ import { Hint, PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function crear(
+export async function createHint(
   gameId: number,
   firstHint: string,
 ): Promise<Hint> {

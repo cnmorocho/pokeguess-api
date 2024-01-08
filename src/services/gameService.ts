@@ -1,21 +1,20 @@
-import * as JuegoRepository from '../repositories/gameRepository';
-import * as PistaRepository from '../repositories/hintRepository';
-import { getDailyPokemon } from '../repositories/pokemonRepository';
-// import { guessPokemon }from '../services/pokemonService';
-import { GameStatus } from '../types';
+// import { createGame } from '../repositories/gameRepository';
+// import { createHint } from '../repositories/hintRepository';
+// import { getDailyPokemon } from '../repositories/pokemonRepository';
+// // import { guessPokemon }from '../services/pokemonService';
+// import { GameStatus } from '../types';
 
-export async function startGame(idJuego?: number): Promise<GameStatus> {
-  if (idJuego) {
-
-  }
-  const nuevoJuego = await JuegoRepository.crear();
-  const pokemonDelDia = await getDailyPokemon();
-  const { id, type } = pokemonDelDia;
-  const pistas = await PistaRepository.crear(id, String(type));
-  return {
-    game: nuevoJuego,
-    hint: pistas,
-  };
+// export async function startGame(idJuego?: number): Promise<GameStatus> {
+//   // if (idJuego) {
+//   // }
+//   const nuevoJuego = await createGame();
+//   const pokemonDelDia = await getDailyPokemon();
+//   const { id, type } = pokemonDelDia;
+//   const hint = await createHint(id, String(type));
+//   return {
+//     game: nuevoJuego,
+//     hint: hint,
+//   };
 }
 
 // async function evaluateAnswer(idJuego: number) {
@@ -23,6 +22,6 @@ export async function startGame(idJuego?: number): Promise<GameStatus> {
 //     // const juego = await JuegoRepository.obtenerJuego();
 //     await guessPokemon(idJuego)
 //   } catch (error) {
-    
+
 //   }
 // }

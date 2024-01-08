@@ -19,6 +19,8 @@ export async function getDailyPokemon(): Promise<CaughtPokemon> {
   const tomorrowDateISOString = tomorrowDate.toISOString();
 
   return await prisma.caughtPokemon.findFirst({
-    where: { dateOfCapture: { gte: todayDateISOString, lte: tomorrowDateISOString } },
+    where: {
+      dateOfCapture: { gte: todayDateISOString, lte: tomorrowDateISOString },
+    },
   });
 }

@@ -1,4 +1,4 @@
-import { Juego, Pista } from "@prisma/client";
+import { Hint, Game } from '@prisma/client';
 
 export type PokemonDescription = {
   color: string;
@@ -7,6 +7,6 @@ export type PokemonDescription = {
 };
 
 export type GameStatus = {
-  game: Juego,
-  hint: Pista,
+  game: Hint;
+  hint: Game;
 };
