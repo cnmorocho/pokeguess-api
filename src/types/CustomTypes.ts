@@ -1,12 +1,12 @@
 import { Juego, Pista } from "@prisma/client";
 
-export type DescripcionPokemon = {
+export type PokemonDescription = {
   color: string;
-  descripcion: string;
-  categoria: string;
+  description: string;
+  category: string;
 };
 
-export type EstadoJuego = {
-  infoJuego: Juego,
-  pistas: Pista,
+export type GameStatus = {
+  game: Juego,
+  hint: Pista,
 };

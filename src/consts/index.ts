@@ -1,1 +1,1 @@
-export const PRIMERA_GEN = '151';
+export const FIRST_GENERATION = '151';

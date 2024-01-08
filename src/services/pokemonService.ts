@@ -1,86 +1,86 @@
 import axios, { AxiosResponse } from 'axios';
 import {
-  DescripcionPokemon,
-  EspeciePokemon,
+  PokemonSpecie,
+  PokemonDescription,
   PokeIndex,
   Pokedex,
   Pokemon,
 } from '../types';
-import { obtenerElementoAleatorio } from '../utils/functions';
-import * as PokemonRepository from '../repositories/pokemonRepository';
-import { PokemonAtrapado } from '@prisma/client';
-import { PRIMERA_GEN } from '../consts';
+import { getRandomItem } from '../utils/functions';
+import { getDailyPokemon, savePokemon, } from '../repositories/pokemonRepository';
+import { CaughtPokemon } from '@prisma/client';
+import { FIRST_GENERATION } from '../consts';
 import environment from '../configuration/environment';
 
-export async function adivinar(pokemon: string): Promise<boolean> {
-  const pokemonDelDia: PokemonAtrapado =
-    await PokemonRepository.obtenerDelDia();
-  return pokemonDelDia.nombre === pokemon;
+export async function guessPokemon(pokemon: string): Promise<boolean> {
+  const dailyPokemon: CaughtPokemon =
+    await getDailyPokemon();
+  return dailyPokemon.name === pokemon;
 }
 
-export async function atrapar(): Promise<PokemonAtrapado> {
+export async function catchPokemon(): Promise<CaughtPokemon> {
   const res: AxiosResponse<Pokedex> = await axios.get(
-    environment.POKEAPI_OBTENER_POKEMONS_URL,
-    { params: { limit: PRIMERA_GEN } },
+    environment.POKEAPI_GET_POKEDEX_URL,
+    { params: { limit: FIRST_GENERATION } },
   );
 
-  const pokemonAtrapado: PokeIndex = obtenerElementoAleatorio(res.data.results);
+  const caughtPokemonIndex: PokeIndex = getRandomItem(res.data.results);
 
-  const { url } = pokemonAtrapado;
+  const { url } = caughtPokemonIndex;
 
-  const informacionPokemon = await obtenerPorURL(url);
+  const pokemonInformation = await getPokemonInformationByURL(url);
 
-  return await PokemonRepository.guardar(informacionPokemon);
+  return await savePokemon(pokemonInformation);
 }
 
-export async function inicializar(): Promise<void> {
-  console.info('Verificando que exista pokemon del dia...');
-  const pokemonDelDia: PokemonAtrapado =
-    await PokemonRepository.obtenerDelDia();
-  if (!pokemonDelDia) {
-    console.info('No se encontró un pokemon.');
-    console.info('Capturando pokemon...');
-    await atrapar();
+export async function init(): Promise<void> {
+  console.info('Verifying Daily Pokemon existence...');
+  const dailyPokemon: CaughtPokemon =
+    await getDailyPokemon();
+  if (!dailyPokemon) {
+    console.info('Daily Pokemon not found.');
+    console.info('Catching a pokemon ...');
+    await catchPokemon();
   }
-  console.info('Iniciando el juego...');
+  console.info('Starting game...');
 }
 
-async function obtenerPorURL(url: string): Promise<PokemonAtrapado> {
+async function getPokemonInformationByURL(url: string): Promise<CaughtPokemon> {
   const res: AxiosResponse<Pokemon> = await axios.get(url);
   const { id, sprites, types, species, name } = res.data;
-  const descripcionPokemon: DescripcionPokemon = await obtenerDescripcionPorURL(
+  const pokemonDescription: PokemonDescription = await getPokemonDescriptionByURL(
     species.url,
   );
 
   return {
-    idPokedex: id,
-    nombre: name,
-    imagen: sprites.other['official-artwork'].front_default,
-    tipos: types.map((tipo) => tipo.type.name).toString(),
-    color: descripcionPokemon.color,
-    categoria: descripcionPokemon.categoria,
-    descripcion: descripcionPokemon.descripcion,
-  } as PokemonAtrapado;
+    pokemonId: id,
+    name: name,
+    sprite: sprites.other['official-artwork'].front_default,
+    type: types.map((tipo) => tipo.type.name).toString(),
+    color: pokemonDescription.color,
+    category: pokemonDescription.category,
+    description: pokemonDescription.description,
+  } as CaughtPokemon;
 }
 
-async function obtenerDescripcionPorURL(
+async function getPokemonDescriptionByURL(
   url: string,
-): Promise<DescripcionPokemon> {
-  const res: AxiosResponse<EspeciePokemon> = await axios.get(url);
+): Promise<PokemonDescription> {
+  const res: AxiosResponse<PokemonSpecie> = await axios.get(url);
   const { color, flavor_text_entries, genera } = res.data;
 
-  const descripcion = flavor_text_entries.find(
-    (entradaTexto) =>
-      entradaTexto.language.name === 'en' &&
-      entradaTexto.version.name === 'red',
+  const description = flavor_text_entries.find(
+    (textEntry) =>
+    textEntry.language.name === 'en' &&
+    textEntry.version.name === 'red',
   );
-  const categoria = genera.find(
-    (categoria) => categoria.language.name === 'en',
+  const category = genera.find(
+    (category) => category.language.name === 'en',
   );
 
   return {
     color: color.name,
-    descripcion: descripcion.flavor_text,
-    categoria: categoria.genus,
+    description: description.flavor_text,
+    category: category.genus,
   };
 }

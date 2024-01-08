@@ -1,4 +1,4 @@
-export type EspeciePokemon = {
+export type PokemonSpecie = {
   id: number;
   name: string;
   order: number;

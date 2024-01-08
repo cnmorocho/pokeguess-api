@@ -1,3 +1,3 @@
-export function obtenerElementoAleatorio<T>(lista: Array<T>): T {
-  return lista[Math.floor(Math.random() * lista.length + 1)];
+export function getRandomItem<T>(list: Array<T>): T {
+  return list[Math.floor(Math.random() * list.length + 1)];
 }
