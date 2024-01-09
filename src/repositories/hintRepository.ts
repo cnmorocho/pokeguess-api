@@ -13,3 +13,7 @@ export async function createHint(
     },
   });
 }
+
+export async function getHintByGameId(gameId: number): Promise<Hint> {
+  return await prisma.hint.findUnique({ where: { gameId: gameId }});
+}

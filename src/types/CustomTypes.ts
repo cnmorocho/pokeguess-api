@@ -7,6 +7,6 @@ export type PokemonDescription = {
 };
 
 export type GameStatus = {
-  game: Hint;
-  hint: Game;
+  game: Game;
+  hint: Hint;
 };
