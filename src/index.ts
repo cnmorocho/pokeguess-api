@@ -8,10 +8,10 @@ import * as PokemonService from './services/pokemonService';
   const app = express();
   const PORT = environment.PORT;
 
-  await PokemonService.inicializar();
+  await PokemonService.init();
   app.use(express.json());
   app.listen(PORT, function () {
-    console.log('Servidor disponible en:\n');
+    console.log('Server listening on:\n');
     console.log(`> Local: http://localhost:${PORT}/`);
   });
   app.use('/v1', router);

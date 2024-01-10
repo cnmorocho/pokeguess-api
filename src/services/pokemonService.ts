@@ -1,33 +1,42 @@
-import axios, { AxiosResponse } from 'axios';
 import { PokeIndex, Pokedex } from '../types';
-import { obtenerElementoAleatorio } from '../utils/functions';
-import * as PokemonRepository from '../repositories/pokemonRepository';
-import { PokemonAtrapado } from '@prisma/client';
-import { POKEAPI_OBTENER_POKEMONS_URL, PRIMERA_GEN } from '../consts';
+import { getPokemonIdFromPokeapiURL, getRandomItem } from '../utils/functions';
+import {
+  getDailyPokemon,
+  savePokemon,
+} from '../repositories/pokemonRepository';
+import { CaughtPokemon } from '@prisma/client';
+import { FIRST_GENERATION } from '../consts';
+import {
+  getPokedexByGeneration,
+  getPokemonInformationById,
+} from '../thirdParty/pokeApiService';
 
-export async function adivinar(pokemon: string): Promise<boolean> {
-  const pokemonDelDia: PokemonAtrapado = await PokemonRepository.obtenerDelDia();
-  return pokemonDelDia.nombre === pokemon;
+export async function guessPokemon(pokemon: string): Promise<boolean> {
+  const dailyPokemon: CaughtPokemon = await getDailyPokemon();
+  return dailyPokemon.name === pokemon;
 }
 
-export async function atrapar(): Promise<PokemonAtrapado> {
-  const axiosResponse: AxiosResponse<Pokedex> = await axios.get(
-    POKEAPI_OBTENER_POKEMONS_URL,
-    { params: { limit: PRIMERA_GEN } },
-  );
-  const pokemonAtrapado: PokeIndex = obtenerElementoAleatorio(
-    axiosResponse.data.results,
-  );
-  return await PokemonRepository.guardar(pokemonAtrapado.name);
+export async function catchPokemon(): Promise<CaughtPokemon> {
+  const pokedex: Pokedex = await getPokedexByGeneration(FIRST_GENERATION);
+
+  const caughtPokemonIndex: PokeIndex = getRandomItem(pokedex.results);
+
+  const { url } = caughtPokemonIndex;
+
+  const pokemonId: number = getPokemonIdFromPokeapiURL(url);
+
+  const pokemonInformation = await getPokemonInformationById(pokemonId);
+
+  return await savePokemon(pokemonInformation);
 }
 
-export async function inicializar(): Promise<void> {
-  console.info('Verificando que exista pokemon del dia...')
-  const pokemonDelDia: PokemonAtrapado = await PokemonRepository.obtenerDelDia();
-  if (!pokemonDelDia) {
-    console.info('No se encontró un pokemon.');
-    console.info('Capturando pokemon...');
-    await atrapar();
+export async function init(): Promise<void> {
+  console.info('Verifying Daily Pokemon existence...');
+  const dailyPokemon: CaughtPokemon = await getDailyPokemon();
+  if (!dailyPokemon) {
+    console.info('Daily Pokemon not found.');
+    console.info('Catching a pokemon ...');
+    await catchPokemon();
   }
-  console.info('Iniciando el juego...')
+  console.info('Starting game...');
 }

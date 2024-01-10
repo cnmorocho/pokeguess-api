@@ -1,8 +1,10 @@
 import { Router } from 'express';
-import * as PokemonController from '../controllers/pokemonController';
+import { guessPokemon } from '../controllers/pokemonController';
+import { playGame } from '../controllers/gameController';
 
 const router = Router();
 
-router.get('/guess', PokemonController.adivinar);
+router.get('/guess', guessPokemon);
+router.post('/play', playGame);
 
 export default router;

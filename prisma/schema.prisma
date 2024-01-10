@@ -10,8 +10,34 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model PokemonAtrapado {
+model CaughtPokemon {
   id Int @id @default(autoincrement())
-  nombre String
-  fecha DateTime @default(now())
+  name String
+  pokemonId Int
+  type String
+  category String
+  description String
+  color String
+  sprite String
+  dateOfCapture DateTime @default(now())
 }
+
+model Game {
+  id Int @id @default(autoincrement())
+  tries Int @default(0)
+  hint Hint?
+  isFinished Boolean @default(false)
+  won Boolean @default(false)
+}
+
+model Hint {
+  id Int @id @default(autoincrement())
+  game Game @relation(fields: [gameId], references: [id])
+  gameId Int @unique
+  type String
+  category String?
+  color String?
+  description String?
+  sprite String?
+}
+
