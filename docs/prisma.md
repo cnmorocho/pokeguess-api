@@ -1,14 +1,12 @@
-# Documentación acerca del uso de Prisma en el proyecto
+# Documentation on Using Prisma in the Project
 
-## Para inicializar la base de datos:
+## To initialize the database:
+
 > [!WARNING]
-> Verificar antes que la carpeta `./prisma` esta eliminada.
+> Verify beforehand that the `./prisma` folder is deleted.
 
 - `npx prisma migrate dev --name init`
 
-## Para visualizar la base de datos (predeterminado puerto 500):
+## To visualize the database (default port 500):
+
 - `npx prisma studio`
-
-
-
-
