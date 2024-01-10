@@ -1,11 +1,18 @@
 import { Game, Hint } from '@prisma/client';
-import { createNewGame, getGameById, updateGameById } from '../repositories/gameRepository';
+import {
+  createNewGame,
+  getGameById,
+  updateGameById,
+} from '../repositories/gameRepository';
 import { createHint, getHintByGameId } from '../repositories/hintRepository';
 import { getDailyPokemon } from '../repositories/pokemonRepository';
 import { GameStatus } from '../types';
 import { updateHint } from './hintService';
 
-export async function playGame(pokemon: string, gameId?: number): Promise<GameStatus> {
+export async function playGame(
+  pokemon: string,
+  gameId?: number,
+): Promise<GameStatus> {
   const dailyPokemon = await getDailyPokemon();
   if (!gameId) {
     return await startNewGame(pokemon);
@@ -30,7 +37,7 @@ async function startNewGame(pokemon: string): Promise<GameStatus> {
   const game: Game = await createNewGame();
   const { type } = dailyPokemon;
   const { id, tries } = game;
-  if (dailyPokemon.name === pokemon){
+  if (dailyPokemon.name === pokemon) {
     return await updateToWonGame(id, tries);
   }
   const updatedGame: Game = await updateGameById(id, { tries: tries + 1 });
@@ -38,18 +45,29 @@ async function startNewGame(pokemon: string): Promise<GameStatus> {
   return { game: updatedGame, hint: createdHint };
 }
 
-async function updateToWonGame(id: number, tries: number, hint?: Hint): Promise<GameStatus> {
-  const updatedGame: Game = await updateGameById(id, { isFinished: true, won: true, tries: tries });
+async function updateToWonGame(
+  id: number,
+  tries: number,
+  hint?: Hint,
+): Promise<GameStatus> {
+  const updatedGame: Game = await updateGameById(id, {
+    isFinished: true,
+    won: true,
+    tries: tries,
+  });
   return {
     game: updatedGame,
-    hint: hint ?? {} as Hint,
-  }
+    hint: hint ?? ({} as Hint),
+  };
 }
 
-async function updateToFinishedGame(id: number, hint: Hint): Promise<GameStatus> {
+async function updateToFinishedGame(
+  id: number,
+  hint: Hint,
+): Promise<GameStatus> {
   const updatedGame: Game = await updateGameById(id, { isFinished: true });
   return {
     game: updatedGame,
     hint: hint,
-  }
+  };
 }

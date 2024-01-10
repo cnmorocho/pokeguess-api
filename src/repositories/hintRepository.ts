@@ -15,10 +15,12 @@ export async function createHint(
 }
 
 export async function getHintByGameId(gameId: number): Promise<Hint> {
-  return await prisma.hint.findUnique({ where: { gameId: gameId }});
+  return await prisma.hint.findUnique({ where: { gameId: gameId } });
 }
 
-export async function updateHintById(id: number, game: Partial<Hint>): Promise<Hint> {
-  return await prisma.hint.update({ data: game, where: { id: id }  })
+export async function updateHintById(
+  id: number,
+  game: Partial<Hint>,
+): Promise<Hint> {
+  return await prisma.hint.update({ data: game, where: { id: id } });
 }
-
