@@ -3,6 +3,7 @@ import { createNewGame, getGameById, updateGameById } from '../repositories/game
 import { createHint, getHintByGameId } from '../repositories/hintRepository';
 import { getDailyPokemon } from '../repositories/pokemonRepository';
 import { GameStatus } from '../types';
+import { updateHint } from './hintService';
 
 export async function playGame(pokemon: string, gameId?: number): Promise<GameStatus> {
   const dailyPokemon = await getDailyPokemon();
@@ -12,15 +13,16 @@ export async function playGame(pokemon: string, gameId?: number): Promise<GameSt
   const game: Game = await getGameById(gameId);
   const hint: Hint = await getHintByGameId(gameId);
   const { id, tries } = game;
-  if (tries > 5) {
+  if (tries > 6) {
     return await updateToFinishedGame(id, hint);
   }
   if (game.isFinished) return { game, hint };
   if (dailyPokemon.name === pokemon) {
     return await updateToWonGame(id, tries + 1, hint);
-  } 
+  }
+  const updatedHint: Hint = await updateHint(hint.id, tries + 1);
   const updatedGame: Game = await updateGameById(id, { tries: tries + 1 });
-  return { game: updatedGame, hint };
+  return { game: updatedGame, hint: updatedHint };
 }
 
 async function startNewGame(pokemon: string): Promise<GameStatus> {
@@ -31,8 +33,9 @@ async function startNewGame(pokemon: string): Promise<GameStatus> {
   if (dailyPokemon.name === pokemon){
     return await updateToWonGame(id, tries);
   }
-  const hint: Hint = await createHint(id, String(type));
-  return { game, hint };
+  const updatedGame: Game = await updateGameById(id, { tries: tries + 1 });
+  const createdHint: Hint = await createHint(id, String(type));
+  return { game: updatedGame, hint: createdHint };
 }
 
 async function updateToWonGame(id: number, tries: number, hint?: Hint): Promise<GameStatus> {
