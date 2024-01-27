@@ -1,15 +1,9 @@
 import { PokeIndex, Pokedex } from '../types';
 import { getPokemonIdFromPokeapiURL, getRandomItem } from '../utils/functions';
-import {
-  getDailyPokemon,
-  savePokemon,
-} from '../repositories/pokemonRepository';
+import { getDailyPokemon, savePokemon } from '../repositories/pokemonRepository';
 import { CaughtPokemon } from '@prisma/client';
 import { FIRST_GENERATION } from '../consts';
-import {
-  getPokedexByGeneration,
-  getPokemonInformationById,
-} from '../thirdParty/pokeApiService';
+import { getPokedexByGeneration, getPokemonInformationById } from '../thirdParty/pokeApiService';
 
 export async function guessPokemon(pokemon: string): Promise<boolean> {
   const dailyPokemon: CaughtPokemon = await getDailyPokemon();

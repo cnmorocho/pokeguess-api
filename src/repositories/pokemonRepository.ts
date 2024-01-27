@@ -2,9 +2,7 @@ import { PrismaClient, CaughtPokemon } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function savePokemon(
-  pokemon: CaughtPokemon,
-): Promise<CaughtPokemon> {
+export async function savePokemon(pokemon: CaughtPokemon): Promise<CaughtPokemon> {
   return await prisma.caughtPokemon.create({
     data: pokemon,
   });
