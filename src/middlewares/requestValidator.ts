@@ -2,14 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import { AnyZodObject, z } from 'zod';
 import { RequestValidationMiddleware } from '../types/CustomTypes';
 
-export function validateRequestQueries(
-  schema: AnyZodObject,
-): RequestValidationMiddleware {
-  return async function (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
+export function validateRequestQueries(schema: AnyZodObject): RequestValidationMiddleware {
+  return async function (req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const queryParams = req.query;
       await schema.parseAsync(queryParams);

@@ -6,10 +6,7 @@ export async function createNewGame(): Promise<Game> {
   return await prisma.game.create({ data: { tries: 0 } });
 }
 
-export async function updateGameById(
-  id: number,
-  game: Partial<Game>,
-): Promise<Game> {
+export async function updateGameById(id: number, game: Partial<Game>): Promise<Game> {
   return await prisma.game.update({ data: game, where: { id: id } });
 }
 
