@@ -20,7 +20,7 @@ export async function getHintByGameId(gameId: number): Promise<Hint> {
 
 export async function updateHintById(
   id: number,
-  game: Partial<Hint>,
+  hints: Partial<Hint>,
 ): Promise<Hint> {
-  return await prisma.hint.update({ data: game, where: { id: id } });
+  return await prisma.hint.update({ data: hints, where: { id: id } });
 }
