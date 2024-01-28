@@ -3,8 +3,7 @@ import { updateHintById } from '../repositories/hintRepository';
 import { getDailyPokemon } from '../repositories/pokemonRepository';
 
 export async function updateHint(hintId: number, tries: number): Promise<Hint> {
-  const { category, color, description, sprite, type } =
-    await getDailyPokemon();
+  const { category, color, description, sprite, type } = await getDailyPokemon();
 
   switch (tries) {
     case 1:
