@@ -39,5 +39,6 @@ model Hint {
   color String?
   description String?
   sprite String?
+  name String?
 }
 
