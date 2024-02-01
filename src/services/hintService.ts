@@ -20,3 +20,8 @@ export async function updateHint(hintId: number, tries: number): Promise<Hint> {
       return await updateHintById(hintId, {});
   }
 }
+
+export async function getAllHints(hintId: number): Promise<Hint> {
+  const { category, color, description, sprite, type, name } = await getDailyPokemon();
+  return await updateHintById(hintId, {category, color, description, sprite, type, name});
+}

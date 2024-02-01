@@ -1,9 +1,9 @@
-import { CaughtPokemon, Game, Hint } from '@prisma/client';
+import { Game, Hint } from '@prisma/client';
 import { createNewGame, getGameById, updateGameById } from '../repositories/gameRepository';
-import { createHint, getHintByGameId, updateHintById } from '../repositories/hintRepository';
+import { createHint, getHintByGameId } from '../repositories/hintRepository';
 import { getDailyPokemon } from '../repositories/pokemonRepository';
 import { GameStatus } from '../types';
-import { updateHint } from './hintService';
+import { getAllHints, updateHint } from './hintService';
 
 export async function playGame(pokemon: string, gameId?: number): Promise<GameStatus> {
   const dailyPokemon = await getDailyPokemon();
@@ -44,16 +44,16 @@ async function updateToWonGame(id: number, tries: number, hint?: Hint): Promise<
     won: true,
     tries: tries,
   });
+  const hintWithAnswer: Hint = await getAllHints(hint.id);
   return {
     game: updatedGame,
-    hint: hint ?? ({} as Hint),
+    hint: hintWithAnswer,
   };
 }
 
 async function updateToFinishedGame(id: number, hint: Hint): Promise<GameStatus> {
   const updatedGame: Game = await updateGameById(id, { isFinished: true });
-  const dailyPokemon: CaughtPokemon = await getDailyPokemon();
-  const hintWithAnswer: Hint = await updateHintById(hint.id, { ...hint, name: dailyPokemon.name})
+  const hintWithAnswer: Hint = await getAllHints(hint.id);
   return {
     game: updatedGame,
     hint: hintWithAnswer,
